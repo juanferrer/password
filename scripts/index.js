@@ -95,6 +95,14 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (maxF - minC + 1)) + minC;
 }
 
+/**
+ * Prepare for another game
+ */
+function reset() {
+    settings.wordsLoaded = false;
+    settings.words = [];
+}
+
 // #endregion
 
 // #region Event handlers
@@ -107,8 +115,7 @@ $("#start-button").click(() => {
 });
 
 $("#play-again-button").click(() => {
-    settings.wordsLoaded = false;
-    settings.words = [];
+    reset();
 });
 
 /** Using function to have access to this */

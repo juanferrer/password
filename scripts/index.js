@@ -36,17 +36,79 @@ function changeTheme(newTheme) {
     updateSettings();
 }
 
+/**
+ * Load words from data/*.json
+ */
+function loadWords() {
+    let d = $.Deferred();
+
+
+    $.getJSON(`data/${settings.languageCode.toLowerCase()}.json`, data => {
+        words = data.words;
+        settings.wordsLoaded = true;
+        d.resolve();
+    }).fail(d => {
+        d.reject();
+    });
+
+    return d.promise();
+}
+
+/**
+ * Get an array with n words and remove them from the available list
+ * @param {Number} n
+ * @returns {string[]} Array of n words
+ */
+function getWordsToPlay(n) {
+    let playWords = [];
+    let playWordsIndices = [];
+
+    // Get n unique random integers between 0 and n
+    for (let i = 0; i < n; ++i) {
+        let int;
+        do {
+            int = getRandomInt(0, words.length - 1);
+        } while (playWordsIndices.includes(int) && words.length > n); // Repeat if already in array
+        playWordsIndices.push(int);
+        //playWords.push(words[int]);
+    }
+
+    // Got the indices and the words, now splice the array and put the words in a new array
+    for (let i = words.length - 1; i >= 0; --i) {
+        if (playWordsIndices.includes(i)) {
+            playWords.push(words.splice(i, 1)[0]);
+        }
+    }
+
+    debug.log(playWords);
+
+    return playWords;
+}
+
+/**
+ * Get an int between min and max
+ * @param {Number} max
+ */
+function getRandomInt(min, max) {
+    let minC = Math.ceil(min);
+    let maxF = Math.floor(max);
+    return Math.floor(Math.random() * (maxF - minC + 1)) + minC;
+}
+
 // #endregion
 
 // #region Event handlers
 $("#start-button").click(() => {
-    $.getJSON(`data/${settings.languageCode.toLowerCase()}.json`, data => {
-        let words = data.words;
+    if (!settings.wordsLoaded) {
+        loadWords().then(() => getWordsToPlay(settings.amountOfWords)).catch(e => debug.log(e));
+    } else {
+        getWordsToPlay(settings.amountOfWords);
+    }
+});
 
-        debug.log();
-    });
-
-
+$("#play-again-button").click(() => {
+    settings.wordsLoaded = false;
+    settings.words = [];
 });
 
 /** Using function to have access to this */
@@ -65,8 +127,14 @@ const Themes = Object.freeze({
 
 let settings = {
     languageCode: "en",
-    theme: Themes.DARK
+    theme: Themes.DARK,
+    time: 60,
+    amountOfWords: 5,
+    extraPointOnCompletion: false,
+    wordsLoaded: false,
 };
+
+let words = {};
 
 
 // Get language

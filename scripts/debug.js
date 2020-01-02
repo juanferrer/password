@@ -3,7 +3,7 @@
 let debug = {
     dev: true,
     log: m => {
-        if (this.dev) console.log(m);
+        if (debug.dev) console.log(m);
     },
     warn: m => {
         console.alert(m);

@@ -6,7 +6,7 @@ let debug = {
         if (debug.dev) console.log(m);
     },
     warn: m => {
-        console.alert(m);
+        alert(m);
     },
     error: m => {
         console.error(m);

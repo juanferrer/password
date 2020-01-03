@@ -23,5 +23,4 @@ function doI18N(languageCode) {
 let languages = {
     en: "English",
     es: "Español",
-    ru: "Русский",
 };

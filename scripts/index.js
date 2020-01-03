@@ -1,10 +1,52 @@
-/* global $, debug, doI18N */
+/* global $, debug, doI18N, languages */
+
+const Themes = Object.freeze({
+    LIGHT: "theme-light",
+    DARK: "theme-dark"
+});
+
+const GameAreaHeights = Object.freeze({
+    BUTTON: "15%",
+    NEWGAME: "35%",
+    SETTINGS: "100%",
+    GAMEPLAY: "100%",
+    INTERMEDIATE: "100%",
+    SCORE: "100%",
+});
+
+const AnimationTimer = 600;
+
+const MaxNumber = 1000;
+const MinNumber = 1;
+
+let words = {};
+let wordsLoaded = false;
+
+let settings = {
+    languageCode: "en",
+    theme: Themes.DARK,
+
+    time: 60,
+    amountOfWords: 5,
+    amountofRounds: 5,
+    extraPointOnCompletion: false,
+};
+
+
+// Perform initial setup
+loadSettings();
+doI18N("en");
+populateLanguageSelect();
+changeTheme(settings.theme);
+
+// Get language
+settings.languageCode = "en";
 
 // #region Functions
 
 /** Load the settings from local storage */
 function loadSettings() {
-    let jsonSettings = localStorage.getItem("mafiaSettings");
+    let jsonSettings = localStorage.getItem("passwordSettings");
     try {
         if (jsonSettings) {
             settings = JSON.parse(jsonSettings);
@@ -12,8 +54,15 @@ function loadSettings() {
     } catch (e) {
         debug.log("String is not valid JSON");
         // No point storing it then
-        localStorage.removeItem("mafiaSettings");
+        localStorage.removeItem("passwordSettings");
         // Use the current definition of settings (above)
+    }
+}
+
+/** Populate language-select with the available translations */
+function populateLanguageSelect() {
+    for (let lang in languages) {
+        $("#language-select").append(`<option value="${lang}">${languages[lang]}</option>`);
     }
 }
 
@@ -38,20 +87,22 @@ function changeTheme(newTheme) {
 
 /**
  * Load words from data/*.json
+ * @return {Promise}
  */
 function loadWords() {
-    let d = $.Deferred();
-
-
-    $.getJSON(`data/${settings.languageCode.toLowerCase()}.json`, data => {
-        words = data.words;
-        settings.wordsLoaded = true;
-        d.resolve();
-    }).fail(d => {
-        d.reject();
+    return new Promise((resolve, reject) => {
+        if (!wordsLoaded) {
+            $.getJSON(`data/${settings.languageCode.toLowerCase()}.json`, data => {
+                words = data.words;
+                wordsLoaded = true;
+                resolve();
+            }).fail(() => {
+                reject();
+            });
+        } else {
+            resolve();
+        }
     });
-
-    return d.promise();
 }
 
 /**
@@ -99,19 +150,107 @@ function getRandomInt(min, max) {
  * Prepare for another game
  */
 function reset() {
-    settings.wordsLoaded = false;
+    wordsLoaded = false;
     settings.words = [];
+}
+
+/**
+ * After a delay, change the height of the specified area
+ * @param {Number} height
+ */
+function openGameArea(areaClass, height) {
+    setTimeout(() => { $(areaClass).css("height", height); }, AnimationTimer);
+}
+
+/**
+ * Add or substract a number from the specified counter
+ * @param {HTMLElement} counterButton
+ * @param {Number} modifier
+ */
+function modifyCounter(counterButton, modifier) {
+    let display = $(`#${counterButton.getAttribute("data-display")}`);
+    let number = parseInt(display.attr("data-value"));
+    // Also check the face value, it may have been manually edited:
+    let displayNumber = parseInt(display.html());
+    let step = parseInt(display.attr("data-step"));
+    if (displayNumber !== number) number = displayNumber;
+    if (isNaN(number)) {
+        number = MinNumber;
+        step = 0;
+    }
+
+    let finalNumber = number + (modifier * step);
+
+    if (finalNumber < MinNumber) finalNumber = MinNumber;
+    if (finalNumber > MaxNumber) finalNumber = MaxNumber;
+
+    display.attr("data-value", finalNumber);
+    updateCounters();
+}
+
+/** Update the counter's display */
+function updateCounters() {
+
+    $(".counter-button").each((index, counterButton) => {
+        let display = $(`#${counterButton.getAttribute("data-display")}`);
+        let number = parseInt(display.attr("data-value"));
+
+        if (counterButton.classList.contains("counter-increment-button")) {
+            if (number >= 999 || isNaN(number)) {
+                counterButton.setAttribute("disabled", true);
+            } else {
+                counterButton.removeAttribute("disabled");
+            }
+        }
+
+        if (counterButton.classList.contains("counter-decrement-button")) {
+            if (number <= 1 || isNaN(number)) {
+                counterButton.setAttribute("disabled", true);
+            } else {
+                counterButton.removeAttribute("disabled");
+            }
+        }
+    });
+
+    // Update each counter display
+    $(".counter-display").each((index, display) => {
+        display.innerHTML = $(display).attr("data-value");
+    });
 }
 
 // #endregion
 
 // #region Event handlers
-$("#start-button").click(() => {
-    if (!settings.wordsLoaded) {
-        loadWords().then(() => getWordsToPlay(settings.amountOfWords)).catch(e => debug.log(e));
-    } else {
-        getWordsToPlay(settings.amountOfWords);
-    }
+
+$("#theme-button").click(() => {
+    changeTheme((settings.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK));
+});
+
+/** Using function to have access to this */
+$("#language-select").change(function () {
+    settings.languageCode = this.value;
+    wordsLoaded = false;
+    updateSettings();
+    doI18N(settings.languageCode);
+});
+
+$("#start-new-game-button").click(() => {
+    openGameArea(".new-game-area", GameAreaHeights.NEWGAME);
+    $(".button-area").css("height", "0");
+
+    // Since this is asynchronous, we can start the load here
+    loadWords();
+});
+
+$("#settings-button").click(() => {
+    openGameArea(".settings-area", GameAreaHeights.SETTINGS);
+    $(".button-area").css("height", "0");
+});
+
+$(".back-button").click(() => {
+    openGameArea(".button-area", GameAreaHeights.BUTTON);
+    $(".new-game-area").css("height", "0");
+    $(".settings-area").css("height", "0");
 });
 
 $("#play-again-button").click(() => {
@@ -125,29 +264,29 @@ $("#language-select").change(function () {
     doI18N(settings.languageCode);
 });
 
-// #endregion
-
-const Themes = Object.freeze({
-    LIGHT: "theme-light",
-    DARK: "theme-dark"
+$(".counter-increment-button").click(e => {
+    // Before updating
+    modifyCounter(e.currentTarget, 1);
 });
 
-let settings = {
-    languageCode: "en",
-    theme: Themes.DARK,
-    time: 60,
-    amountOfWords: 5,
-    extraPointOnCompletion: false,
-    wordsLoaded: false,
-};
+$(".counter-decrement-button").click(e => {
+    modifyCounter(e.currentTarget, -1);
+});
 
-let words = {};
+/** Only allow number keys*/
+$(".counter-display").keypress(e => {
+    // It's either not a number (out of number range) or the resulting number would end up being too long
+    if (e.which < 48 || e.which > 57) {
+        e.preventDefault();
+    }
+});
 
+$(".counter-display").blur(e => {
+    let n = parseInt(e.currentTarget.innerHTML);
+    if (n < MinNumber || isNaN(n)) n = MinNumber;
+    if (n > MaxNumber) n = MaxNumber;
+    e.currentTarget.setAttribute("data-value", n);
+    updateCounters();
+});
 
-// Get language
-if (debug.dev) settings.languageCode = "en";
-else settings.languageCode = "en";
-
-// Perform I18N
-doI18N("en");
-
+// #endregion

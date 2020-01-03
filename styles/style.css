@@ -1,0 +1,325 @@
+:root {
+    --main-color: #222;
+    --border-color: #888;
+    --bg-color: #fff;
+    --accent-color: #00A151;
+    --small-text-color: #999;
+    --button-disabled-color: #88888844;
+    --transition-duration: 0.1s
+}
+
+/* TOOD: Set two themes here by changing the colours of some basic elements */
+
+.theme-light {
+    --main-color: #222;
+    --border-color: #888;
+    --bg-color: #fff;
+    --accent-color: #00A151;
+    --small-text-color: #999;
+    --button-disabled-color: #88888844;
+}
+
+.theme-dark {
+    --main-color: #eee;
+    --border-color: #888;
+    --bg-color: #333;
+    --accent-color: #00A151;
+    --small-text-color: #666;
+    --button-disabled-color: #77777744;
+}
+
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Rubik', sans-serif;
+    color: var(--main-color);
+    background-color: var(--bg-color);
+    transition-property: background-color, color;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+}
+
+hr {
+    width: 100%;
+    border-top: 1px solid var(--border-color);
+    border-bottom: none;
+    margin: 0;
+}
+
+.content-area {
+    width: 80vw;
+    height: 90vh;
+    max-width: 400px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    height: 25%;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.button-pair {
+    width: 100%;
+    height: 50px;
+    min-height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+button {
+    background-color: transparent;
+    border-color: var(--border-color);
+    border-style: solid;
+    border-width: 1px;
+    outline: none;
+    text-transform: uppercase;
+    color: var(--main-color);
+    transition-property: background-color, color;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+}
+
+button:focus {
+    border-color: var(--accent-color);
+}
+
+button:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+button:disabled {
+    background-color: var(--button-disabled-color);
+}
+
+button:focus:disabled {
+    color: initial;
+}
+
+.theme-button {
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.theme-button i {
+    font-size: 30px;
+}
+
+.theme-button:focus {
+    border-color: var(--accent-color);
+}
+
+.theme-button:hover {
+    color: var(--bg-color);
+    background-color: var(--main-color);
+}
+
+.game-button {
+    width: 45%;
+    height: 52px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.game-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    transition-property: height;
+    transition-duration: 0.5s;
+    overflow: hidden;
+    transition-timing-function: ease-in-out;
+}
+
+.button-area {
+    height: 15%;
+}
+
+.new-game-area {
+    /* height: 35%; */
+    height: 0;
+}
+
+.settings-area {
+    /* height: 100%*/
+    height: 0;
+}
+
+.gameplay-area {
+    /* height: 100%; */
+    height: 0;
+}
+
+.intermediate-area {
+    /* height: 100%; */
+    height: 0;
+}
+
+.score-area {
+    /* height: 100%; */
+    height: 0;
+}
+
+.language-select-container {
+    width: 50%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.settings {
+    width: 90%;
+    height: 45%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.label-counter-pair {
+    width: 90%;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.counter {
+    display: flex;
+    flex-direction: row;
+    height: 40%;
+    width: 40%;
+}
+
+.counter-display {
+    min-width: 50%;
+    margin: 0;
+    background-color: transparent;
+    border-color: var(--border-color);
+    border-style: solid;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px 0 5px;
+}
+
+.counter-button-pair {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 50px;
+}
+
+.counter-button {
+    height: 50%;
+    border-left: none;
+}
+
+.counter-increment-button {
+    border-top-right-radius: 5px;
+}
+
+.counter-decrement-button {
+    border-bottom-right-radius: 5px;
+    border-top: none;
+}
+
+#start-button {
+    display: none;
+}
+
+.checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 2px;
+}
+
+#players-list-gameplay-area span:hover {
+    color: var(--accent-color);
+}
+
+select {
+    outline: none;
+    transition-property: background-color, color;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+}
+
+select:focus {
+    border-color: var(--accent-color);
+}
+
+select:hover {
+    border-color: var(--accent-color);
+}
+
+input[type="text"] {
+    outline: none;
+    padding: 10px;
+    width: 45%;
+    border-color: var(--border-color);
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 1px;
+}
+
+input[type="text"]:focus {
+    border-color: var(--accent-color);
+}
+
+.small-links {
+    width: 60%;
+    height: 10%;
+    color: var(--small-text-color);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+a:link {
+    color: var(--small-text-color);
+}
+
+a:visited {
+    color: var(--small-text-color);
+}
+
+a:hover {
+    color: var(--small-text-color);
+}
+
+a:active {
+    color: var(--small-text-color);
+}

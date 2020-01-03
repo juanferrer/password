@@ -28,7 +28,7 @@ let settings = {
 
     time: 60,
     amountOfWords: 5,
-    amountofRounds: 5,
+    amountOfRounds: 5,
     extraPointOnCompletion: false,
 };
 
@@ -186,6 +186,10 @@ function modifyCounter(counterButton, modifier) {
 
     display.attr("data-value", finalNumber);
     updateCounters();
+
+    // Also, update the settings
+    settings[display.attr("data-setting")] = finalNumber;
+    updateSettings();
 }
 
 /** Update the counter's display */
@@ -288,5 +292,10 @@ $(".counter-display").blur(e => {
     e.currentTarget.setAttribute("data-value", n);
     updateCounters();
 });
+
+$("#extra-point-checkbox").change(e => {
+    settings.extraPointOnCompletion = e.currentTarget.checked;
+});
+
 
 // #endregion

@@ -5,12 +5,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Password</title>
+    <meta name="author" content="Juan Ferrer">
+    <meta name="description" content="Password (party game)">
+    <meta name="keywords" content="Password, party, game, online, multiplayer">
     <link rel="stylesheet" href="styles/style.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<body>
+<body class="theme-light">
+    <div class="content-area">
+        <button class="theme-button" id="theme-button"><i class="material-icons">invert_colors</i></button>
+        <div class="title" id="title">Password</div>
+        <hr>
+        <div class="game-area button-area">
+            <div class="button-pair">
+                <button class="game-button" id="start-new-game-button">NEW GAME</button>
+                <button class="game-button" id="settings-button">SETTINGS</button>
+            </div>
+        </div>
 
-    <button class="themed-button" id="start-button">Start</button>
+        <div class="game-area new-game-area">
+            <div class="teams-list" id="teams-list"></div>
+            <input id="new-game-team-name-input" type="text" name="new-game-team-name" value="" placeholder="Team name">
+            <div class="button-pair">
+                <button class="game-button" id="new-game-button">START</button>
+                <button class="game-button back-button" id="new-game-back-button">BACK</button>
+            </div>
+        </div>
+
+        <div class="game-area settings-area">
+            <!-- TODO -->
+            <div class="label-counter-pair">
+                <label for="rounds-counter-display" id="rounds-number-input-label">Rounds</label>
+                <div class="counter">
+                    <div class="counter-display" id="rounds-counter-display" data-value="5" data-step="1"
+                        contenteditable="">5</div>
+                    <div class="counter-button-pair">
+                        <button class="counter-button counter-increment-button"
+                            data-display="rounds-counter-display">+</button>
+                        <button class="counter-button counter-decrement-button"
+                            data-display="rounds-counter-display">-</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="label-counter-pair">
+                <label for="time-counter-display" id="time-number-input-label">Time per turn</label>
+                <div class="counter">
+                    <div class="counter-display" id="time-counter-display" data-value="60" data-step="10"
+                        contenteditable="">60</div>
+                    <div class="counter-button-pair">
+                        <button class="counter-button counter-increment-button"
+                            data-display="time-counter-display">+</button>
+                        <button class="counter-button counter-decrement-button"
+                            data-display="time-counter-display">-</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="label-counter-pair">
+                <label for="word-counter-display" id="word-number-input-label">Words per turn</label>
+                <div class="counter">
+                    <div class="counter-display" id="word-counter-display" data-value="5" data-step="1"
+                        contenteditable="">5</div>
+                    <div class="counter-button-pair">
+                        <button class="counter-button counter-increment-button"
+                            data-display="word-counter-display">+</button>
+                        <button class="counter-button counter-decrement-button"
+                            data-display="word-counter-display">-</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="extra-point-checkbox">
+                <label for="extra-point-checkbox" id="extra-point-checkbox-label">Award extra point on
+                    completion</label>
+            </div>
+            <button class="game-button back-button" id="settings-back-button">BACK</button>
+        </div>
+
+        <div class="game-area gameplay-area">
+            <!-- TODO -->
+        </div>
+
+        <div class="game-area intermediate-area">
+            <!-- TODO -->
+            <div class="team-scores-list" id="team-intermediate-scores-list"></div>
+            <div class="button-pair">
+                <button class="game-button" id="play-again-button">CONTINUE</button>
+                <button class="game-button back-button" id="exit">EXIT</button>
+            </div>
+        </div>
+
+        <div class="game-area score-area">
+            <div class="team-scores-list" id="team-scores-list"></div>
+            <div class="button-pair">
+                <button class="game-button" id="play-again-button">PLAY AGAIN</button>
+                <button class="game-button" id="score-settings-button">SETTINGS</button>
+            </div>
+        </div>
+        <hr>
+        <div class="language-select-container">
+            <select id="language-select"></select>
+        </div>
+        <div class="version-number">v0.1</div>
+        <div class="small-links">
+            <a href="https://github.com/juanferrer/password">github.com/juanferrer/password</a>
+        </div>
+    </div>
 
     <!--form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
         <input type="hidden" name="cmd" value="_s-xclick" />

@@ -298,6 +298,42 @@ input[type="text"]:focus {
     border-color: var(--accent-color);
 }
 
+.teams-list {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.team-name-item {
+    pointer-events: stroke;
+}
+
+.input-button-pair {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    height: 40px;
+    width: 100%;
+}
+
+input.new-game-team-name-input {
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.new-game-team-name-add-button {
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+    width: 40px;
+}
+
 .small-links {
     width: 60%;
     height: 10%;

@@ -297,5 +297,22 @@ $("#extra-point-checkbox").change(e => {
     settings.extraPointOnCompletion = e.currentTarget.checked;
 });
 
+$("#new-game-team-name-add-button").click(e => {
+    let teamList = $(".teams-list")[0];
+    let newTeam = document.createElement("LI");
+    newTeam.innerHTML = e.currentTarget.previousElementSibling.value;
+    newTeam.setAttribute("contenteditable", "");
+    newTeam.classList.add("team-name-item");
+    newTeam.addEventListener("blur", function (e) {
+        if (e.currentTarget.innerHTML === "") {
+            e.currentTarget.parentElement.removeChild(e.currentTarget);
+        }
+    });
+    if (newTeam.innerHTML !== "") {
+        teamList.appendChild(newTeam);
+        e.currentTarget.previousElementSibling.value = "";
+    }
+});
+
 
 // #endregion

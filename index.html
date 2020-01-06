@@ -26,8 +26,14 @@
         </div>
 
         <div class="game-area new-game-area">
-            <div class="teams-list" id="teams-list"></div>
-            <input id="new-game-team-name-input" type="text" name="new-game-team-name" value="" placeholder="Team name">
+            <!-- <div class="teams-list" id="teams-list"></div> -->
+            <ul class="teams-list"></ul>
+            <div class="input-button-pair">
+                <input class="new-game-team-name-input" type="text" name="new-game-team-name" value=""
+                    placeholder="Team name">
+                <button class="new-game-team-name-add-button" type="button" id="new-game-team-name-add-button"
+                    data->+</button>
+            </div>
             <div class="button-pair">
                 <button class="game-button" id="new-game-button">START</button>
                 <button class="game-button back-button" id="new-game-back-button">BACK</button>

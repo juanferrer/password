@@ -6,6 +6,7 @@
     --small-text-color: #999;
     --button-disabled-color: #88888844;
     --transition-duration: 0.1s;
+    --animation-time: 200ms;
     --countdown-time: 60s;
 }
 
@@ -378,15 +379,19 @@ svg.gameplay-area-timer-circle {
 
 svg.gameplay-area-timer-circle circle {
     stroke-dasharray: 168px;
-    stroke-dashoffset: 0px;
+    stroke-dashoffset: 168px;
     stroke-linecap: round;
     stroke-width: 5px;
     stroke: var(--accent-color);
     fill: none;
 }
 
-.timer-animation {
+.timer-countdown-animation {
     animation: countdown var(--countdown-time) linear infinite forwards;
+}
+
+.timer-reset-animation {
+    animation: countup var(--animation-time) linear 1 forwards;
 }
 
 @keyframes countdown {
@@ -395,6 +400,15 @@ svg.gameplay-area-timer-circle circle {
     }
     to {
         stroke-dashoffset: 168px;
+    }
+}
+
+@keyframes countup {
+    from {
+        stroke-dashoffset: 168px;
+    }
+    to {
+        stroke-dashoffset: 0px;
     }
 }
 

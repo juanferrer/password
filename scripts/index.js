@@ -14,7 +14,7 @@ const GameAreaHeights = Object.freeze({
     SCORE: "100%",
 });
 
-const AnimationTimer = 600;
+const AnimationTime = 600;
 
 const MaxNumber = 1000;
 const MinNumber = 1;
@@ -70,6 +70,12 @@ function loadSettings() {
         localStorage.removeItem("passwordSettings");
         // Use the current definition of settings (above)
     }
+
+    $("#rounds-counter-display").attr("data-value", settings.amountOfRounds);
+    $("#words-counter-display").attr("data-value", settings.amountOfWords);
+    $("#time-counter-display").attr("data-value", settings.time);
+    $("#extra-point-checkbox")[0].checked = settings.extraPointOnCompletion;
+    updateCounters();
 }
 
 /** Populate language-select with the available translations */
@@ -172,7 +178,7 @@ function reset() {
  * @param {Number} height
  */
 function openGameArea(areaClass, height) {
-    setTimeout(() => { $(areaClass).css("height", height); }, AnimationTimer);
+    setTimeout(() => { $(areaClass).css("height", height); }, AnimationTime);
 }
 
 /**
@@ -281,6 +287,9 @@ $(".back-button").click(() => {
     openGameArea(".button-area", GameAreaHeights.BUTTON);
     $(".new-game-area").css("height", "0");
     $(".settings-area").css("height", "0");
+    $(".intermediate-area").css("height", "0");
+
+    updateSettings();
 });
 
 /** Using function to have access to this */
@@ -362,12 +371,22 @@ $("#continue-button").click(() => {
     $(".gameplay-area-team-name").html(teams[teamIndex].name);
 
     // Populate word list
+    let words = getWordsToPlay(settings.amountOfWords);
+    let wordList = $(".gameplay-area-word-list");
+    wordList.empty();
+
+    words.forEach(w => {
+        let e = document.createElement("LI");
+        e.innerHTML = w;
+        wordList.append(e);
+    });
 
     // Start timer
     countdownTime = settings.time;
     $(":root").css("--countdown-time", `${countdownTime}s`);
 
-    $(".gameplay-area-timer-circle circle").addClass("timer-animation");
+    $(".gameplay-area-timer-circle circle").removeClass("timer-reset-animation");
+    $(".gameplay-area-timer-circle circle").addClass("timer-countdown-animation");
     $(".gameplay-area-timer-number").html(countdownTime);
     timerInterval = setInterval(() => {
         --countdownTime;
@@ -375,7 +394,8 @@ $("#continue-button").click(() => {
         if (countdownTime == 0) {
             // Should finish here
             clearInterval(timerInterval);
-            $(".gameplay-area-timer-circle circle").removeClass("timer-animation");
+            $(".gameplay-area-timer-circle circle").removeClass("timer-countdown-animation");
+            $(".gameplay-area-timer-circle circle").addClass("timer-reset-animation");
 
             openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
             $(".gameplay-area").css("height", "0");

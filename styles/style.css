@@ -5,7 +5,8 @@
     --accent-color: #00A151;
     --small-text-color: #999;
     --button-disabled-color: #88888844;
-    --transition-duration: 0.1s
+    --transition-duration: 0.1s;
+    --countdown-time: 60s;
 }
 
 /* TOOD: Set two themes here by changing the colours of some basic elements */
@@ -332,6 +333,69 @@ input.new-game-team-name-input {
     border-left: none;
     border-radius: 0 5px 5px 0;
     width: 40px;
+}
+
+.gameplay-area-team-name-and-timer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 60px;
+}
+
+.gameplay-area-team-name {
+    text-align: center;
+    margin: 25px;
+    position: relative;
+    top: 30px;
+}
+
+.gameplay-area-timer {
+    position: relative;
+    text-align: center;
+    height: 60px;
+    width: 60px;
+    right: 50px;
+    align-self: flex-end;
+    position: relative;
+    top: -30px;
+}
+
+.gameplay-area-timer-number {
+    color: var(--main-color);
+    line-height: 60px;
+}
+
+svg.gameplay-area-timer-circle {
+    position: relative;
+    top: -60px;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    transform: rotateY(-180deg) rotateZ(-90deg);
+}
+
+svg.gameplay-area-timer-circle circle {
+    stroke-dasharray: 168px;
+    stroke-dashoffset: 0px;
+    stroke-linecap: round;
+    stroke-width: 5px;
+    stroke: var(--accent-color);
+    fill: none;
+}
+
+.timer-animation {
+    animation: countdown var(--countdown-time) linear infinite forwards;
+}
+
+@keyframes countdown {
+    from {
+        stroke-dashoffset: 0px;
+    }
+    to {
+        stroke-dashoffset: 168px;
+    }
 }
 
 .gameplay-area-word-list {

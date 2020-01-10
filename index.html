@@ -94,8 +94,15 @@
 
         <div class="game-area gameplay-area">
             <!-- TODO -->
-            <div class="gameplay-area-team-name">TEAM</div>
-            <div class="gameplay-area-timer"></div>
+            <div class="gameplay-area-team-name-and-timer">
+                <div class="gameplay-area-team-name">TEAM</div>
+                <div class="gameplay-area-timer">
+                    <div class="gameplay-area-timer-number">60</div>
+                    <svg class="gameplay-area-timer-circle">
+                        <circle r="27" cx="30" cy="30"></circle>
+                    </svg>
+                </div>
+            </div>
             <ul class="gameplay-area-word-list">
                 <li>Word 0</li>
                 <li>Word 1</li>
@@ -110,7 +117,7 @@
             <div class="intermediate-area-next-team">NEXT TEAM</div>
             <div class="team-scores-list" id="team-intermediate-scores-list"></div>
             <div class="button-pair">
-                <button class="game-button" id="play-again-button">CONTINUE</button>
+                <button class="game-button" id="continue-button">CONTINUE</button>
                 <button class="game-button back-button" id="exit">EXIT</button>
             </div>
         </div>

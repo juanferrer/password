@@ -19,9 +19,6 @@ const AnimationTimer = 600;
 const MaxNumber = 1000;
 const MinNumber = 1;
 
-let words = {};
-let wordsLoaded = false;
-
 let settings = {
     languageCode: "en",
     theme: Themes.DARK,
@@ -31,6 +28,22 @@ let settings = {
     amountOfRounds: 5,
     extraPointOnCompletion: false,
 };
+
+
+let words = {};
+let wordsLoaded = false;
+let countdownTime = settings.time;
+let timerInterval;
+let teamIndex = 0;
+/**
+ * @typedef {Object} Team
+ * @property {Number} index
+ * @property {String} name
+ * @property {Number} score
+ */
+
+/** @type {Team[]} */
+let teams = [];
 
 
 // Perform initial setup
@@ -222,6 +235,19 @@ function updateCounters() {
     });
 }
 
+/** Ensure the teams array has all the teams with the right names */
+function updateTeamNames() {
+    // Clear it, just in case
+    teams = [];
+
+    let teamNames = $(".teams-list").children().toArray().map(x => x.innerHTML);
+
+    // Now create a team for each name
+    teamNames.forEach((t, i) => {
+        teams.push({ index: i, name: t, score: 0 });
+    });
+}
+
 // #endregion
 
 // #region Event handlers
@@ -257,10 +283,6 @@ $(".back-button").click(() => {
     $(".settings-area").css("height", "0");
 });
 
-$("#play-again-button").click(() => {
-    reset();
-});
-
 /** Using function to have access to this */
 $("#language-select").change(function () {
     settings.languageCode = this.value;
@@ -290,6 +312,9 @@ $(".counter-display").blur(e => {
     if (n < MinNumber || isNaN(n)) n = MinNumber;
     if (n > MaxNumber) n = MaxNumber;
     e.currentTarget.setAttribute("data-value", n);
+
+    // Also, update the settings
+    settings[e.currentTarget.getAttribute("data-setting")] = n;
     updateCounters();
 });
 
@@ -303,16 +328,68 @@ $("#new-game-team-name-add-button").click(e => {
     newTeam.innerHTML = e.currentTarget.previousElementSibling.value;
     newTeam.setAttribute("contenteditable", "");
     newTeam.classList.add("team-name-item");
+
+    // Add a way to handle the modification of team names
     newTeam.addEventListener("blur", function (e) {
         if (e.currentTarget.innerHTML === "") {
             e.currentTarget.parentElement.removeChild(e.currentTarget);
         }
+
+        updateTeamNames();
     });
+
+    // If nothing was written, add nothing
     if (newTeam.innerHTML !== "") {
         teamList.appendChild(newTeam);
         e.currentTarget.previousElementSibling.value = "";
+        updateTeamNames();
     }
 });
 
+$("#new-game-button").click(() => {
+    openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
+    $(".new-game-area").css("height", "0");
+
+    // Populate name of team
+    $(".intermediate-area-next-team").html(teams[teamIndex].name);
+});
+
+$("#continue-button").click(() => {
+    openGameArea(".gameplay-area", GameAreaHeights.GAMEPLAY);
+    $(".intermediate-area").css("height", "0");
+
+    // Populate name of team
+    $(".gameplay-area-team-name").html(teams[teamIndex].name);
+
+    // Populate word list
+
+    // Start timer
+    countdownTime = settings.time;
+    $(":root").css("--countdown-time", `${countdownTime}s`);
+
+    $(".gameplay-area-timer-circle circle").addClass("timer-animation");
+    $(".gameplay-area-timer-number").html(countdownTime);
+    timerInterval = setInterval(() => {
+        --countdownTime;
+        $(".gameplay-area-timer-number").html(countdownTime);
+        if (countdownTime == 0) {
+            // Should finish here
+            clearInterval(timerInterval);
+            $(".gameplay-area-timer-circle circle").removeClass("timer-animation");
+
+            openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
+            $(".gameplay-area").css("height", "0");
+
+            // Populate name of next team
+            ++teamIndex;
+            if (teamIndex > teams.length - 1) teamIndex = 0;
+            $(".intermediate-area-next-team").html(teams[teamIndex].name);
+        }
+    }, 1000);
+});
+
+$("#play-again-button").click(() => {
+    reset();
+});
 
 // #endregion

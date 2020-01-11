@@ -316,6 +316,8 @@ input[type="text"]:focus {
     pointer-events: stroke;
 }
 
+.team-scores-list {}
+
 .input-button-pair {
     display: flex;
     flex-direction: row;

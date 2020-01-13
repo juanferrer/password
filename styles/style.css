@@ -316,8 +316,6 @@ input[type="text"]:focus {
     pointer-events: stroke;
 }
 
-.team-scores-list {}
-
 .input-button-pair {
     display: flex;
     flex-direction: row;
@@ -368,6 +366,7 @@ input.new-game-team-name-input {
 .gameplay-area-timer-number {
     color: var(--main-color);
     line-height: 60px;
+    transition-duration: var(--transition-duration);
 }
 
 svg.gameplay-area-timer-circle {
@@ -427,6 +426,45 @@ svg.gameplay-area-timer-circle circle {
     font-size: 25px;
 }
 
+.gameplay-area-word-list li {
+    position: relative;
+}
+
+.gameplay-area-word-list li::after {
+    border-bottom: 5px solid var(--accent-color);
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    width: 0%;
+    transition-property: width;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+}
+
+.gameplay-area-word-list li.solved-word::after {
+    width: 100%;
+}
+
+.intermediate-area-next-team {
+    font-size: 40px;
+    text-decoration-line: underline;
+    text-decoration-color: var(--accent-color);
+}
+
+.team-scores-list {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: center;
+}
+
 .small-links {
     width: 60%;
     height: 10%;
@@ -435,6 +473,10 @@ svg.gameplay-area-timer-circle circle {
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
+
+.small-links a {
+    transition-duration: var(--transition-duration);
 }
 
 a:link {

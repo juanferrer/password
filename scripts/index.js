@@ -33,6 +33,7 @@ let settings = {
 let words = {};
 let wordsLoaded = false;
 let countdownTime = settings.time;
+let currentRound = 0;
 let timerInterval;
 let teamIndex = 0;
 /**
@@ -254,6 +255,73 @@ function updateTeamNames() {
     });
 }
 
+/**
+ * Strikethrough word and mark it as solved in the list
+ * @param {MouseEvent} e
+ */
+function wordSolved(e) {
+    e.currentTarget.classList.toggle("solved-word");
+    let adding = e.currentTarget.classList.contains("solved-word");
+    let parent = e.currentTarget.parentElement;
+    let currentSolved = parseInt(parent.getAttribute("data-solved"));
+    if (adding)++currentSolved;
+    else --currentSolved;
+
+    parent.setAttribute("data-solved", currentSolved);
+}
+
+/** Decide what to do when interval time runs out */
+function intervalTimeout() {
+    --countdownTime;
+    $(".gameplay-area-timer-number").html(countdownTime);
+    if (countdownTime == 0) {
+        // Should finish here
+        clearInterval(timerInterval);
+        $(".gameplay-area-timer-circle circle").removeClass("timer-countdown-animation");
+        $(".gameplay-area-timer-circle circle").addClass("timer-reset-animation");
+
+        // Add score to the current team
+        let wordListElement = $(".gameplay-area-word-list");
+        let solved = parseInt(wordListElement.attr("data-solved"));
+        if (settings.extraPointOnCompletion && solved === wordListElement.children().length) {
+            // It completed all items and we're supposed to award an extra point when all
+            // are completed
+            ++solved;
+        }
+        teams[teamIndex].score += solved;
+
+        // And clear current points
+        wordListElement.attr("data-solved", "0");
+
+        // Populate lists with team names and scores
+        $(".team-scores-list").empty();
+        teams.forEach(t => {
+            let e = document.createElement("LI");
+            e.innerHTML = `${t.name}: ${t.score}`;
+            $(".team-scores-list").append(e);
+        });
+
+        // If we're at the last round and the last team just went, open score screen
+        // Otherwise, prepare for next team
+        if (currentRound === settings.amountOfRounds && teamIndex === teams.length - 1) {
+            openGameArea(".score-area", GameAreaHeights.SCORE);
+            $(".gameplay-area").css("height", "0");
+
+            // Populate name of winner
+            $(".winner-team-name").html();
+
+        } else {
+            openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
+            $(".gameplay-area").css("height", "0");
+
+            // Populate name of next team
+            ++teamIndex;
+            if (teamIndex > teams.length - 1) teamIndex = 0;
+            $(".intermediate-area-next-team").html(teams[teamIndex].name);
+        }
+    }
+}
+
 // #endregion
 
 // #region Event handlers
@@ -371,16 +439,7 @@ $("#new-game-button").click(() => {
     });
 });
 
-$(".gameplay-area-word-list li").click(e => {
-    e.currentTarget.classList.toggle("solved-word");
-    let adding = e.currentTarget.classList.contains("solved-word");
-    let parent = e.currentTarget.parentElement;
-    let currentSolved = parseInt(parent.getAttribute("data-solved"));
-    if (adding)++currentSolved;
-    else --currentSolved;
-
-    parent.setAttribute("data-solved", currentSolved);
-});
+$(".gameplay-area-word-list li").click(wordSolved);
 
 $("#continue-button").click(() => {
     openGameArea(".gameplay-area", GameAreaHeights.GAMEPLAY);
@@ -397,18 +456,9 @@ $("#continue-button").click(() => {
     words.forEach(w => {
         let e = document.createElement("LI");
         e.innerHTML = w;
-        
+
         // Add a click event to list items
-        e.addEventListener("click", e => {
-            e.currentTarget.classList.toggle("solved-word");
-            let adding = e.currentTarget.classList.contains("solved-word");
-            let parent = e.currentTarget.parentElement;
-            let currentSolved = parseInt(parent.getAttribute("data-solved"));
-            if (adding)++currentSolved;
-            else --currentSolved;
-        
-            parent.setAttribute("data-solved", currentSolved);
-        });
+        e.addEventListener("click", wordSolved);
         wordList.append(e);
     });
 
@@ -419,45 +469,7 @@ $("#continue-button").click(() => {
     $(".gameplay-area-timer-circle circle").removeClass("timer-reset-animation");
     $(".gameplay-area-timer-circle circle").addClass("timer-countdown-animation");
     $(".gameplay-area-timer-number").html(countdownTime);
-    timerInterval = setInterval(() => {
-        --countdownTime;
-        $(".gameplay-area-timer-number").html(countdownTime);
-        if (countdownTime == 0) {
-            // Should finish here
-            clearInterval(timerInterval);
-            $(".gameplay-area-timer-circle circle").removeClass("timer-countdown-animation");
-            $(".gameplay-area-timer-circle circle").addClass("timer-reset-animation");
-
-            // Add score to the current team
-            let wordListElement = $(".gameplay-area-word-list");
-            let solved = parseInt(wordListElement.attr("data-solved"));
-            if (settings.extraPointOnCompletion && solved === wordListElement.children().length) {
-                // It completed all items and we're supposed to award an extra point when all
-                // are completed
-                ++solved;
-            }
-            teams[teamIndex].score += solved;
-
-            // And clear current points
-            wordListElement.attr("data-solved", "0");
-
-            openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
-            $(".gameplay-area").css("height", "0");
-
-            // Populate name of next team
-            ++teamIndex;
-            if (teamIndex > teams.length - 1) teamIndex = 0;
-            $(".intermediate-area-next-team").html(teams[teamIndex].name);
-
-            // Populate list with team names and scores
-            $(".team-scores-list").empty();
-            teams.forEach(t => {
-                let e = document.createElement("LI");
-                e.innerHTML = `${t.name}: ${t.score}`;
-                $(".team-scores-list").append(e);
-            });
-        }
-    }, 1000);
+    timerInterval = setInterval(intervalTimeout, 1000);
 });
 
 $("#play-again-button").click(() => {

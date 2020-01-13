@@ -303,12 +303,20 @@ function intervalTimeout() {
 
         // If we're at the last round and the last team just went, open score screen
         // Otherwise, prepare for next team
-        if (currentRound === settings.amountOfRounds && teamIndex === teams.length - 1) {
+        if ((currentRound === settings.amountOfRounds - 1) && (teamIndex === teams.length - 1)) {
             openGameArea(".score-area", GameAreaHeights.SCORE);
             $(".gameplay-area").css("height", "0");
 
             // Populate name of winner
-            $(".winner-team-name").html();
+            let topScore = 0;
+            let winnerIndex;
+            teams.forEach((t, i) => {
+                if (t.score > topScore) {
+                    topScore = t.score;
+                    winnerIndex = i;
+                }
+            });
+            $(".winner-team-name").html(teams[winnerIndex].name);
 
         } else {
             openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
@@ -316,7 +324,10 @@ function intervalTimeout() {
 
             // Populate name of next team
             ++teamIndex;
-            if (teamIndex > teams.length - 1) teamIndex = 0;
+            if (teamIndex > teams.length - 1) {
+                ++currentRound;
+                teamIndex = 0;
+            }
             $(".intermediate-area-next-team").html(teams[teamIndex].name);
         }
     }

@@ -466,6 +466,10 @@ svg.gameplay-area-timer-circle circle {
     align-items: center;
 }
 
+.winner-team-name {
+    font-size: 45px;
+}
+
 .small-links {
     width: 60%;
     height: 10%;

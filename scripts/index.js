@@ -14,6 +14,15 @@ const GameAreaHeights = Object.freeze({
     SCORE: "100%",
 });
 
+const GameAreaIDs = Object.freeze({
+    BUTTON: "#button-area",
+    NEWGAME: "#new-game-area",
+    SETTINGS: "#settings-area",
+    GAMEPLAY: "#gameplay-area",
+    INTERMEDIATE: "#intermediate-area",
+    SCORE: "#score-area",
+});
+
 const AnimationTime = 600;
 
 const MaxNumber = 1000;
@@ -49,12 +58,14 @@ let teams = [];
 
 // Perform initial setup
 loadSettings();
-doI18N("en");
 populateLanguageSelect();
+doI18N(settings.languageCode);
+$("#language-select").val(settings.languageCode);
 changeTheme(settings.theme);
 
-// Get language
-settings.languageCode = "en";
+if (!debug.isWeb) {
+    $(".small-links").show();
+}
 
 // #region Functions
 
@@ -172,6 +183,12 @@ function getRandomInt(min, max) {
 function reset() {
     wordsLoaded = false;
     settings.words = [];
+    loadWords();
+    teams.forEach(t => {
+        t.score = 0;
+    });
+    currentRound = 0;
+    teamIndex = 0;
 }
 
 /**
@@ -304,8 +321,8 @@ function intervalTimeout() {
         // If we're at the last round and the last team just went, open score screen
         // Otherwise, prepare for next team
         if ((currentRound === settings.amountOfRounds - 1) && (teamIndex === teams.length - 1)) {
-            openGameArea(".score-area", GameAreaHeights.SCORE);
-            $(".gameplay-area").css("height", "0");
+            openGameArea(GameAreaIDs.SCORE, GameAreaHeights.SCORE);
+            $(GameAreaIDs.GAMEPLAY).css("height", "0");
 
             // Populate name of winner
             let topScore = 0;
@@ -319,8 +336,8 @@ function intervalTimeout() {
             $(".winner-team-name").html(teams[winnerIndex].name);
 
         } else {
-            openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
-            $(".gameplay-area").css("height", "0");
+            openGameArea(GameAreaIDs.INTERMEDIATE, GameAreaHeights.INTERMEDIATE);
+            $(GameAreaIDs.GAMEPLAY).css("height", "0");
 
             // Populate name of next team
             ++teamIndex;
@@ -341,6 +358,10 @@ $("#theme-button").click(() => {
     changeTheme((settings.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK));
 });
 
+$("#language-button").click(() => {
+
+});
+
 /** Using function to have access to this */
 $("#language-select").change(function () {
     settings.languageCode = this.value;
@@ -350,25 +371,27 @@ $("#language-select").change(function () {
 });
 
 $("#start-new-game-button").click(() => {
-    openGameArea(".new-game-area", GameAreaHeights.NEWGAME);
-    $(".button-area").css("height", "0");
+    openGameArea(GameAreaIDs.NEWGAME, GameAreaHeights.NEWGAME);
+    $(GameAreaIDs.BUTTON).css("height", "0");
 
     // Since this is asynchronous, we can start the load here
     loadWords();
 });
 
-$("#settings-button").click(() => {
-    openGameArea(".settings-area", GameAreaHeights.SETTINGS);
-    $(".button-area").css("height", "0");
+$(".settings-button").click(() => {
+    openGameArea(GameAreaIDs.SETTINGS, GameAreaHeights.SETTINGS);
+    $(GameAreaIDs.BUTTON).css("height", "0");
+    $(GameAreaIDs.SCORE).css("height", "0");
 });
 
 $(".back-button").click(() => {
-    openGameArea(".button-area", GameAreaHeights.BUTTON);
-    $(".new-game-area").css("height", "0");
-    $(".settings-area").css("height", "0");
-    $(".intermediate-area").css("height", "0");
+    openGameArea(GameAreaIDs.BUTTON, GameAreaHeights.BUTTON);
+    $(GameAreaIDs.NEWGAME).css("height", "0");
+    $(GameAreaIDs.SETTINGS).css("height", "0");
+    $(GameAreaIDs.INTERMEDIATE).css("height", "0");
 
     updateSettings();
+    reset();
 });
 
 /** Using function to have access to this */
@@ -435,8 +458,8 @@ $("#new-game-team-name-add-button").click(e => {
 });
 
 $("#new-game-button").click(() => {
-    openGameArea(".intermediate-area", GameAreaHeights.INTERMEDIATE);
-    $(".new-game-area").css("height", "0");
+    openGameArea(GameAreaIDs.INTERMEDIATE, GameAreaHeights.INTERMEDIATE);
+    $(GameAreaIDs.NEWGAME).css("height", "0");
 
     // Populate name of team
     $(".intermediate-area-next-team").html(teams[teamIndex].name);
@@ -453,8 +476,8 @@ $("#new-game-button").click(() => {
 $(".gameplay-area-word-list li").click(wordSolved);
 
 $("#continue-button").click(() => {
-    openGameArea(".gameplay-area", GameAreaHeights.GAMEPLAY);
-    $(".intermediate-area").css("height", "0");
+    openGameArea(GameAreaIDs.GAMEPLAY, GameAreaHeights.GAMEPLAY);
+    $(GameAreaIDs.INTERMEDIATE).css("height", "0");
 
     // Populate name of team
     $(".gameplay-area-team-name").html(teams[teamIndex].name);
@@ -485,6 +508,8 @@ $("#continue-button").click(() => {
 
 $("#play-again-button").click(() => {
     reset();
+    openGameArea(GameAreaIDs.INTERMEDIATE, GameAreaHeights.INTERMEDIATE);
+    $(GameAreaIDs.SCORE).css("height", "0");
 });
 
 // #endregion

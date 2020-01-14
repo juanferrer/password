@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 
 let debug = {
-    dev: true,
+    isDev: true,
+    isWeb: true,
     log: m => {
-        if (debug.dev) console.log(m);
+        if (debug.isDev) console.log(m);
     },
     warn: m => {
         alert(m);

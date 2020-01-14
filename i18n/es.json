@@ -1,0 +1,17 @@
+{
+    "title": "Password",
+    "start-new-game-button": "Nueva partida",
+    "settings-button": "Ajustes",
+    "new-game-team-name-input": "Nombre de Equipo",
+    "new-game-button": "Empezar",
+    "back-button": "Atrás",
+    "rounds-number-input-label": "Cantidad de rondas",
+    "time-number-input-label": "Tiempo por turno",
+    "word-number-input-label": "Palabras por turno",
+    "extra-point-checkbox-label": "Punto extra al completar",
+    "intermediate-area-instruction": "Próximo equipo:",
+    "continue-button": "Continuar",
+    "exit-button": "Salir",
+    "winner-label": "Ganador:",
+    "play-again-button": "Jugar otra vez"
+}

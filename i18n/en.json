@@ -1,0 +1,17 @@
+{
+    "title": "Password",
+    "start-new-game-button": "NEW GAME",
+    "settings-button": "SETTINGS",
+    "new-game-team-name-input": "Team Name",
+    "new-game-button": "START",
+    "back-button": "BACK",
+    "rounds-number-input-label": "Rounds",
+    "time-number-input-label": "Time per turn",
+    "word-number-input-label": "Words per turn",
+    "extra-point-checkbox-label": "Extra point on completion",
+    "intermediate-area-instruction": "Next team:",
+    "continue-button": "CONTINUE",
+    "exit-button": "EXIT",
+    "winner-label": "Winner:",
+    "play-again-button": "PLAY AGAIN"
+}

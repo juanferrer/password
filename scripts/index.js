@@ -123,7 +123,7 @@ function changeTheme(newTheme) {
 function loadWords() {
     return new Promise((resolve, reject) => {
         if (!wordsLoaded) {
-            $.getJSON(`data/${settings.languageCode.toLowerCase()}.json`, data => {
+            $.getJSON(`data/${settings.languageCode.toLowerCase()}.min.json`, data => {
                 words = data.words;
                 wordsLoaded = true;
                 resolve();

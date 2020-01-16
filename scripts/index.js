@@ -66,7 +66,7 @@ window.onload = () => {
     if (!debug.isWeb) {
         $(".small-links").show();
     }
-}
+};
 
 // #region Functions
 

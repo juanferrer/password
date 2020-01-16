@@ -55,16 +55,17 @@ let teamIndex = 0;
 /** @type {Team[]} */
 let teams = [];
 
+window.onload = () => {
+    // Perform initial setup
+    loadSettings();
+    populateLanguageSelect();
+    doI18N(settings.languageCode);
+    changeLanguage(settings.languageCode);
+    changeTheme(settings.theme);
 
-// Perform initial setup
-loadSettings();
-populateLanguageSelect();
-doI18N(settings.languageCode);
-$("#language-select").val(settings.languageCode);
-changeTheme(settings.theme);
-
-if (!debug.isWeb) {
-    $(".small-links").show();
+    if (!debug.isWeb) {
+        $(".small-links").show();
+    }
 }
 
 // #region Functions
@@ -351,6 +352,17 @@ function intervalTimeout() {
     }
 }
 
+/**
+ * Update language-select value and trigger a change event
+ * @param {String} lang
+ */
+function changeLanguage(lang) {
+    // Manually trigger change in language-select
+    settings.languageCode = lang;
+    $("#language-select").val(settings.languageCode);
+    $("#language-select")[0].dispatchEvent(new Event("change"));
+}
+
 // #endregion
 
 // #region Event handlers
@@ -369,9 +381,7 @@ $("#language-button").blur(() => {
 });
 
 $("#custom-language-select div").on("mousedown", e => {
-    // Manually trigger change in language-select
-    $("#language-select").val(e.currentTarget.getAttribute("value"));
-    $("#language-select")[0].dispatchEvent(new Event("change"));
+    changeLanguage(e.currentTarget.getAttribute("value"));
 });
 
 /** Using function to have access to this */

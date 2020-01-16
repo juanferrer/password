@@ -94,6 +94,7 @@ function loadSettings() {
 function populateLanguageSelect() {
     for (let lang in languages) {
         $("#language-select").append(`<option value="${lang}">${languages[lang]}</option>`);
+        $("#custom-language-select").append(`<div value="${lang}">${languages[lang]}</div>`);
     }
 }
 
@@ -359,7 +360,18 @@ $("#theme-button").click(() => {
 });
 
 $("#language-button").click(() => {
+    //$(".custom-language-select").width(150);
+    $("#custom-language-select").toggleClass("open");
+});
 
+$("#language-button").blur(() => {
+    $("#custom-language-select").removeClass("open");
+});
+
+$("#custom-language-select div").on("mousedown", e => {
+    // Manually trigger change in language-select
+    $("#language-select").val(e.currentTarget.getAttribute("value"));
+    $("#language-select")[0].dispatchEvent(new Event("change"));
 });
 
 /** Using function to have access to this */
@@ -368,6 +380,11 @@ $("#language-select").change(function () {
     wordsLoaded = false;
     updateSettings();
     doI18N(settings.languageCode);
+
+    // Reorder custom-language-select so that the active language is at the top
+    let eToMove = $(`#custom-language-select div[value=${settings.languageCode}]`)[0];
+    let parent = eToMove.parentElement;
+    parent.insertBefore(eToMove, parent.childNodes[0]);
 });
 
 $("#start-new-game-button").click(() => {
@@ -392,13 +409,6 @@ $(".back-button").click(() => {
 
     updateSettings();
     reset();
-});
-
-/** Using function to have access to this */
-$("#language-select").change(function () {
-    settings.languageCode = this.value;
-    updateSettings();
-    doI18N(settings.languageCode);
 });
 
 $(".counter-increment-button").click(e => {

@@ -145,11 +145,53 @@ button:focus:disabled {
 }
 
 .custom-language-select {
+    width: 0px;
     position: absolute;
     top: 10px;
     right: 110px;
     font-size: 30px;
     text-align: right;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    transition-property: width;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+}
+
+.custom-language-select> :first-child {
+    color: var(--accent-color);
+}
+
+.custom-language-select.open {
+    width: 150px;
+}
+
+.custom-language-select.open div {
+    padding-right: 10px;
+    line-height: 30px;
+    margin: 2px;
+}
+
+.custom-language-select.open div:hover {
+    cursor: pointer;
+}
+
+.custom-language-select.open div::after {
+    content: "";
+    position: absolute;
+    background-color: var(--accent-color);
+    width: 0px;
+    height: 30px;
+    right: 0;
+    transition-property: width;
+    transition-duration: var(--transition-duration);
+    transition-timing-function: ease-in-out;
+}
+
+.custom-language-select.open div:hover::after {
+    width: 5px;
 }
 
 .game-button {
@@ -207,6 +249,7 @@ button:focus:disabled {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    display: none;
 }
 
 .settings {
@@ -486,6 +529,10 @@ svg.gameplay-area-timer-circle circle {
     font-size: 45px;
 }
 
+.version-number {
+    margin: 5%;
+}
+
 .small-links {
     width: 60%;
     height: 10%;
@@ -515,18 +562,3 @@ a:hover {
 a:active {
     color: var(--small-text-color);
 }
-
-/* style.css */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: #000000;
-    color: white;
-    padding: 8px;
-    z-index: 100;
-  }
-  
-  .skip-link:focus {
-    top: 0;
-  }

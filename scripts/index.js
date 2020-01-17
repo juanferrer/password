@@ -97,6 +97,11 @@ function populateLanguageSelect() {
         $("#language-select").append(`<option value="${lang}">${languages[lang]}</option>`);
         $("#custom-language-select").append(`<div value="${lang}">${languages[lang]}</div>`);
     }
+
+    // Now, add eventy handlers for them
+    $("#custom-language-select div").mousedown(e => {
+        changeLanguage(e.currentTarget.getAttribute("value"));
+    });
 }
 
 /** Store the settings for later use */
@@ -378,10 +383,6 @@ $("#language-button").click(() => {
 
 $("#language-button").blur(() => {
     $("#custom-language-select").removeClass("open");
-});
-
-$("#custom-language-select div").on("mousedown", e => {
-    changeLanguage(e.currentTarget.getAttribute("value"));
 });
 
 /** Using function to have access to this */

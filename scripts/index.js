@@ -8,7 +8,7 @@ const Themes = Object.freeze({
 const GameAreaHeights = Object.freeze({
     BUTTON: "20%",
     NEWGAME: "60%",
-    SETTINGS: "45%",
+    SETTINGS: "100%",
     GAMEPLAY: "100%",
     INTERMEDIATE: "100%",
     SCORE: "100%",

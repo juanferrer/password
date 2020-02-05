@@ -479,6 +479,12 @@ $("#new-game-team-name-add-button").click(e => {
 });
 
 $("#new-game-button").click(() => {
+
+    if (teams.length === 0) {
+        // They just wanted to get in the game with a single team, improvise a name
+        teams.push({ index: 0, name: "The Unnamed", score: 0 });
+    }
+
     openGameArea(GameAreaIDs.INTERMEDIATE, GameAreaHeights.INTERMEDIATE);
     $(GameAreaIDs.NEWGAME).css("height", "0");
 

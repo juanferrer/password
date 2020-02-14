@@ -20,10 +20,17 @@
 </head>
 
 <body class="theme-light">
-    <main class="content-area">
-        <button class="top-button" id="language-button"><i class="material-icons">translate</i></button>
+    <main class="content-area">       
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_s-xclick" />
+            <input type="hidden" name="hosted_button_id" value="A8JHGUE5B97ME" />
+            <button border="0" name="submit" title="PayPal - The safer, easier way to pay online!"
+                alt="Donate with PayPal button" class="top-button" id="donate-button"><i class="material-icons">credit_card</i></button>
+            <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
+        </form>
+        <button class="top-button" id="language-button"><i class="material-icons" alt="Translate">translate</i></button>
         <div class="custom-language-select" id="custom-language-select"></div>
-        <button class="top-button" id="theme-button"><i class="material-icons">invert_colors</i></button>
+        <button class="top-button" id="theme-button"><i class="material-icons" alt="Invert colours">invert_colors</i></button>
         <div class="title" id="title">Password</div>
         <hr>
         <div class="game-area button-area" id="button-area">
@@ -148,15 +155,8 @@
         </div>
     </main>
 
-    <!--form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-        <input type="hidden" name="cmd" value="_s-xclick" />
-        <input type="hidden" name="hosted_button_id" value="A8JHGUE5B97ME" />
-        <input type="image"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Glazed-Donut.jpg/1280px-Glazed-Donut.jpg"
-            border="0" name="submit" title="PayPal - The safer, easier way to pay online!"
-            alt="Donate with PayPal button" />
-        <img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
-    </form-->
+    <!-- Pre-load scripts -->
+    <script type="text/javascript" src="scripts/debug.js"></script>
 
     <!-- Register Service Worker -->
     <script type="text/javascript" src="sw-register.js"></script>
@@ -166,21 +166,8 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <!-- Custom scripts -->
-    <script type="text/javascript" src="scripts/debug.js"></script>
     <script type="text/javascript" src="scripts/i18n.js"></script>
     <script type="text/javascript" src="scripts/index.js"></script>
-
-    <!-- Ads -->
-    <!-- <script type="text/javascript">
-        atOptions = {
-            'key' : '0d5c520486fd4f76b0d18a751eb5cfe1',
-            'format' : 'iframe',
-            'height' : 600,
-            'width' : 160,
-            'params' : {}
-        };
-        document.write('<scr' + 'ipt type="text/javascript" src="http' + (location.protocol === 'https:' ? 's' : '') + '://www.madcpms.com/0d5c520486fd4f76b0d18a751eb5cfe1/invoke.js"></scr' + 'ipt>');
-    </script> -->
 </body>
 
 </html>

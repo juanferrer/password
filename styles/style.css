@@ -141,6 +141,10 @@ button:focus:disabled {
     background-color: var(--main-color);
 }
 
+#donate-button {
+    right: 110px;
+}
+
 #language-button {
     right: 60px;
 }
